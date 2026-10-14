@@ -31,12 +31,12 @@ jobs:
 
       - name: Run tests
         run: |
-          pytest tests/smoke_playwright --alluredir=allure-results
+          pytest tests/ui/smoke --alluredir=allure-results
 
       - name: Generate Allure report
         run:  |
           npm install -g allure-commandline --save-dev
-          pytest tests/smoke_playwright --alluredir=allure-results
+          pytest tests/ui/smoke --alluredir=allure-results
           allure generate allure-results -o allure-report --clean
 
       - name: Upload Allure report artifact
