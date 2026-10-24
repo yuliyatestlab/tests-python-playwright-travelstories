@@ -1,14 +1,12 @@
 from playwright.sync_api import Page, expect
 
-def test_logout_smoke(page: Page):
-    page.goto("https://yuliyatestlab.pythonanywhere.com/login")
-    page.fill("#email", "test@test.com")
-    page.fill("#password", "test123")
-    page.click("#submit")
+def test_logout_smoke(page: Page, login_page, header, base_url):
+    login_page.open()
+    login_page.login("test@test.com", "test123")
 
     # Logout
-    page.click("#logout")
+    header.logout()
 
     #  Check successful redirect
-    expect(page).to_have_url("https://yuliyatestlab.pythonanywhere.com/")
-    expect(page.locator("#login")).to_be_visible()
+    expect(page).to_have_url(f"{base_url}/")
+    expect(header.login_link).to_be_visible()
