@@ -6,3 +6,4 @@ class BasePage:
 
     def open(self, path: str = "/"):
         self.page.goto(path)
+
