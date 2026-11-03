@@ -8,3 +8,6 @@ class StoryListPage(BasePage):
     def open(self):
         super().open("/")
 
+    def open_first_story(self):
+        self.stories.locator("a").first.click()
+
