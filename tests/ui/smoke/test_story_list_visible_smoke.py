@@ -1,10 +1,8 @@
-from playwright.sync_api import Page, expect
+from playwright.sync_api import expect
 
-def test_story_list_visible(page: Page):
-    page.goto("https://yuliyatestlab.pythonanywhere.com")
+def test_story_list_visible(story_list_page):
+    story_list_page.open()
 
-    story_list = page.locator(".post-preview")
-
-    expect(story_list.first).to_be_visible()
-    assert story_list.count() > 0, "No stories are displayed"
+    expect(story_list_page.stories.first).to_be_visible()
+    assert story_list_page.stories.count() > 0, "No stories are displayed"
 
