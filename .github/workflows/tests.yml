@@ -6,16 +6,19 @@ on:
   pull_request:
     branches: [ main ]
 
+permissions:
+  contents: write
+
 jobs:
   tests:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.10'
 
@@ -26,17 +29,19 @@ jobs:
           pip install allure-pytest
 
       - name: Install Playwright browsers
-        run:
+        run: |
           playwright install --with-deps
 
       - name: Run tests
         run: |
           pytest tests/ui/smoke --alluredir=allure-results
 
+      - name: Install Allure CLI
+        run: |
+          npm install -g allure-commandline
+
       - name: Generate Allure report
         run:  |
-          npm install -g allure-commandline --save-dev
-          pytest tests/ui/smoke --alluredir=allure-results
           allure generate allure-results -o allure-report --clean
 
       - name: Upload Allure report artifact
@@ -46,9 +51,12 @@ jobs:
           path: allure-report
 
       - name: Deploy Allure report to GitHub Pages
+        if: github.ref == 'refs/heads/main'
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: allure-report
+
+
 
           
