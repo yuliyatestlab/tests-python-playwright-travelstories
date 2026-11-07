@@ -31,3 +31,14 @@ def api(base_url):
     return ApiClient(base_url)
 
 
+def pytest_collection_modifyitems(items):
+    for item in items:
+        path = str(item.fspath)
+        if "/tests/ui" in path:
+            item.add_marker(pytest.mark.ui)
+        if "/tests/api" in path:
+            item.add_marker(pytest.mark.api)
+        if "/tests/ui/smoke" in path:
+            item.add_marker(pytest.mark.smoke)
+
+
