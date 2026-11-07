@@ -4,3 +4,6 @@ playwright
 requests
 allure-pytest
 playwright
+requests
+beautifulsoup4
+urllib3<2
