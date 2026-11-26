@@ -5,6 +5,18 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  schedule:
+    - cron: "0 6 * * *"
+  workflow_dispatch:
+    inputs:
+      marker:
+        description: "Which test to run"
+        type: choice
+        options:
+          - smoke
+          - regression
+          - smoke or regression
+        default: smoke
 
 permissions:
   contents: write
@@ -33,8 +45,12 @@ jobs:
           playwright install --with-deps
 
       - name: Run tests
+        env:
+          TEST_EMAIL: ${{ secrets.TEST_EMAIL }}
+          TEST_PASSWORD: ${{ secrets.TEST_PASSWORD }}
+          MARKER: ${{ github.event_name == 'schedule' && 'smoke or regression' || github.event.inputs.marker || 'smoke' }}
         run: |
-          pytest tests/ui/smoke --alluredir=allure-results
+          pytest -m "$MARKER" --alluredir=allure-results
 
       - name: Install Allure CLI
         run: |
